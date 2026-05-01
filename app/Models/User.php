@@ -10,12 +10,14 @@ use Core\Database\ActiveRecord\Model;
  * @property string $name
  * @property string $email
  * @property string $encrypted_password
- * @property string $avatar_name
+ * @property string $role
+ * @property string $status
+ * @property string $profile_photo_path
  */
 class User extends Model
 {
     protected static string $table = 'users';
-    protected static array $columns = ['name', 'email', 'encrypted_password', 'avatar_name'];
+    protected static array $columns = ['name', 'email', 'encrypted_password', 'role', 'status', 'profile_photo_path'];
 
     protected ?string $password = null;
     protected ?string $password_confirmation = null;
@@ -46,6 +48,11 @@ class User extends Model
         return User::findBy(['email' => $email]);
     }
 
+    public static function validateLogin(string $email, string $password): bool {
+        $user = User::findByEmail($email);
+        return $user !== null && $user->authenticate($password);
+    }
+
     public function __set(string $property, mixed $value): void
     {
         parent::__set($property, $value);
@@ -54,6 +61,7 @@ class User extends Model
             $property === 'password' &&
             $this->newRecord() &&
             $value !== null && $value !== ''
+
         ) {
             $this->encrypted_password = password_hash($value, PASSWORD_DEFAULT);
         }
