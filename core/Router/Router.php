@@ -126,37 +126,7 @@ class Router
     {
         if (isset($_SERVER['REQUEST_METHOD'])) {
             require Constants::rootPath()->join('config/routes.php');
-            try {
-                // Tenta executar a rota
-                Router::getInstance()->dispatch();
-                
-            } catch (\Core\Exceptions\HTTPException $e) {
-                $mensagem = $e->getMessage();
-                
-                if (str_contains($mensagem, 'not found')) {
-                    http_response_code(404);
-                    echo "<h1>Erro 404</h1>";
-                    echo "<p>A página que você está procurando não foi encontrada.</p>";
-                    echo "<a href='/'>Voltar para o início</a>";
-                    exit;
-                }
-                
-                if (str_contains($mensagem, 'Method') || str_contains($mensagem, 'POST')) {
-                    http_response_code(405);
-                    echo "<h1>Erro 405 - Método não permitido</h1>";
-                    echo "<p>Você não pode acessar esta rota diretamente pela URL.</p>";
-                    exit;
-                }
-
-                header('Location: /');
-                exit;
-
-            } catch (\Exception $e) {
-                http_response_code(500);
-                echo "<h1>Erro Interno do Servidor 500</h1>";
-                echo "<p>" . $e->getMessage() . "</p>";
-                exit;
-            }
+            Router::getInstance()->dispatch();
         }
     }
 }
