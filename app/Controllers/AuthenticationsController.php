@@ -14,7 +14,6 @@ class AuthenticationsController extends Controller
     {
         $email = $request->getParam('email');
         $password = $request->getParam('password');
-
         $user = User::findByEmail($email);
 
         if (!$email || !$password) {
@@ -23,7 +22,13 @@ class AuthenticationsController extends Controller
             return;
         }
 
-        if (User::userStatuses($user) === 'inactive') {
+        if (!$user) {
+            FlashMessage::danger('Email ou senha inválidos.');
+            $this->redirectTo(route('root'));
+            return;
+        }
+
+        if (User::userStatuses($user) === 'inactive' || User::userStatuses($user) === null) {
             FlashMessage::danger('Esta conta está inativa.');
             $this->redirectTo(route('root'));
             return;
@@ -33,10 +38,10 @@ class AuthenticationsController extends Controller
             Auth::login($user);
 
             $this->redirectTo(route('dashboard'));
-        } else {
-            FlashMessage::danger('Email ou senha inválidos.');
-            $this->redirectTo(route('root'));
         }
+
+        FlashMessage::danger('Email ou senha inválidos.');
+        $this->redirectTo(route('root'));
     }
 
     public function logout(): void

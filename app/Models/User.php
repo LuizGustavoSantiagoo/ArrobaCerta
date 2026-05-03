@@ -50,7 +50,11 @@ class User extends Model
 
     public static function userStatuses(User $user): string | null
     {
-        return $user->status;
+        if ($user->status !== null) {
+            return $user->status;
+        } else {
+            return null;
+        }
     }
 
     public static function validateLogin(string $email, string $password): bool
