@@ -23,6 +23,6 @@ class HomeAccessTest extends TestCase
         $response = $this->client->get('/');
 
         $this->assertEquals(200, $response->getStatusCode());
-        $this->assertStringContainsString('Home Page', (string) $response->getBody());
+        $this->assertStringContainsString('ArrobaCerta - Login', (string) $response->getBody());
     }
 }

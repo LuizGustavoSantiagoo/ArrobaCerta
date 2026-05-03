@@ -18,7 +18,9 @@ class AuthTest extends TestCase
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
+            'role' => 'manager',
+            'status' => 'active'
         ]);
         $this->user->save();
     }
@@ -34,6 +36,25 @@ class AuthTest extends TestCase
         Auth::login($this->user);
 
         $this->assertEquals(1, $_SESSION['user']['id']);
+    }
+
+    public function test_with_user_inactive(): void
+    {
+
+        $this->user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'role' => 'manager',
+            'status' => 'inactive'
+        ]);
+
+        $this->user->save();
+
+        Auth::login($this->user);
+
+        $this->assertFalse(Auth::check());
     }
 
     public function test_user(): void

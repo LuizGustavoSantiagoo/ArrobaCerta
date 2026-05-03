@@ -18,7 +18,9 @@ class UserTest extends TestCase
             'name' => 'User 1',
             'email' => 'fulano@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
+            'role' => 'manager',
+            'status' => 'active'
         ]);
         $this->user->save();
 
@@ -26,7 +28,9 @@ class UserTest extends TestCase
             'name' => 'User 2',
             'email' => 'fulano1@example.com',
             'password' => '123456',
-            'password_confirmation' => '123456'
+            'password_confirmation' => '123456',
+            'role' => 'employee',
+            'status' => 'active'
         ]);
         $this->user2->save();
     }
@@ -91,7 +95,9 @@ class UserTest extends TestCase
             'name' => 'User 3',
             'email' => 'fulano3@example.com',
             'password' => '123456',
-            'password_confirmation' => '1234567'
+            'password_confirmation' => '1234567',
+            'role' => 'employee',
+            'status' => 'active'
         ]);
 
         $this->assertFalse($user->isValid());

@@ -2,10 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
 use Core\Http\Controllers\Controller;
-use Core\Http\Request;
-use Lib\Authentication\Auth;
 
 class HomeController extends Controller
 {
@@ -15,7 +12,7 @@ class HomeController extends Controller
 
     public function index(): void
     {
-        $title = 'Home Page';
+        $title = 'ArrobaCerta - Login';
         $this->render('home/index', compact('title'));
     }
 }

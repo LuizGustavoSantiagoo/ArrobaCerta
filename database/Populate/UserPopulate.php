@@ -34,6 +34,18 @@ class UserPopulate
             $user = new User($employeeUser);
             $user->save();
 
+            $employeeUserInactive = [
+                'name' => 'Employee_inactive',
+                'email' => 'employee_inactive@example.com',
+                'password' => 'password',
+                'password_confirmation' => 'password',
+                'role' => 'employee',
+                'status' => 'inactive',
+            ];
+
+            $user = new User($employeeUserInactive);
+            $user->save();
+
             echo "Users populated successfully.\n";
         } catch (\Throwable $e) {
             echo "Erro ao populate usuários: " . $e->getMessage() . PHP_EOL;
