@@ -24,6 +24,12 @@ class AuthenticationsController extends Controller
             return;
         }
 
+        if(User::userStatuses($user) === 'inactive') {
+            FlashMessage::danger('Esta conta está inativa.');
+            $this->redirectTo(route('root'));
+            return;
+        }
+
         if (User::validateLogin($email, $password)) {
             Auth::login($user);
 
