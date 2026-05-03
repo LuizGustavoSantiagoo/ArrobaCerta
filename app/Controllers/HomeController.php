@@ -6,9 +6,12 @@ use Core\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
+    protected string $layout = 'authentication_layout';
+
+
     public function index(): void
     {
-        $title = 'Home Page';
+        $title = 'ArrobaCerta - Login';
         $this->render('home/index', compact('title'));
     }
 }

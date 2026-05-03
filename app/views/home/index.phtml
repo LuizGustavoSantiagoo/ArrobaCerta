@@ -1,1 +1,21 @@
-<p>TSI3D Framework Template</p>
+<div class="border rounded mx-auto bg-white p-4 mt-[10%] w-96 shadow-lg">
+    <form class="grid grid-cols-1 gap-4" action="/authenticate" method="POST" class="<?= empty($errors) ? '' : 'border border-red-500' ?>" novalidate>
+        <div class="mx-auto w-[30%]">
+            <img class="contain" src="/logo512.png" alt="Logo">
+        </div>
+        <h1 class="font-bold text-center">
+            <?=  $title ?>
+        </h1>
+            <?php require __DIR__ . '/../layouts/_flash_message.phtml'; ?>        
+
+        <div class="flex flex-col">
+            <label for="email">Email</label>
+            <input type="text" class="border rounded-lg p-2" name="email" id="email">
+        </div>
+        <div class="flex flex-col">
+            <label for="password">Senha</label>
+            <input type="password" class="border rounded-lg p-2" name="password" id="password">
+        </div>
+        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" type="submit">Login</button>
+    </form>
+</div>

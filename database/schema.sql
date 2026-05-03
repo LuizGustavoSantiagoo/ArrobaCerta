@@ -7,7 +7,9 @@ CREATE TABLE users (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(50) NOT NULL,
     encrypted_password VARCHAR(255) NOT NULL,
-    avatar_name VARCHAR(65),
+    role enum('manager', 'employee') NOT NULL,
+    status enum('active', 'inactive') NOT NULL,
+    profile_photo_path VARCHAR(255) NULL,
     UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB;
 
