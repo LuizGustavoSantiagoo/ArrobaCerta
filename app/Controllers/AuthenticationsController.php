@@ -10,7 +10,6 @@ use Lib\FlashMessage;
 
 class AuthenticationsController extends Controller
 {
-
     public function authenticate(Request $request): void
     {
         $email = $request->getParam('email');
@@ -18,13 +17,13 @@ class AuthenticationsController extends Controller
 
         $user = User::findByEmail($email);
 
-        if(!$email || !$password) {
+        if (!$email || !$password) {
             FlashMessage::danger('Por favor, preencha todos os campos.');
             $this->redirectTo(route('root'));
             return;
         }
 
-        if(User::userStatuses($user) === 'inactive') {
+        if (User::userStatuses($user) === 'inactive') {
             FlashMessage::danger('Esta conta está inativa.');
             $this->redirectTo(route('root'));
             return;
@@ -40,9 +39,9 @@ class AuthenticationsController extends Controller
         }
     }
 
-        public function logout(): void
-        {
-            Auth::logout();
-            $this->redirectTo(route('root'));
-        }
+    public function logout(): void
+    {
+        Auth::logout();
+        $this->redirectTo(route('root'));
+    }
 }

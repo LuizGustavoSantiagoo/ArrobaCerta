@@ -6,7 +6,6 @@ use Core\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
-
     protected string $layout = 'authentication_layout';
 
 

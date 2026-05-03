@@ -53,7 +53,8 @@ class User extends Model
         return $user->status;
     }
 
-    public static function validateLogin(string $email, string $password): bool {
+    public static function validateLogin(string $email, string $password): bool
+    {
         $user = User::findByEmail($email);
         return $user !== null && $user->authenticate($password) && $user->status === 'active';
     }
@@ -66,7 +67,6 @@ class User extends Model
             $property === 'password' &&
             $this->newRecord() &&
             $value !== null && $value !== ''
-
         ) {
             $this->encrypted_password = password_hash($value, PASSWORD_DEFAULT);
         }

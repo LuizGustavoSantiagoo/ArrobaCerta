@@ -1,6 +1,7 @@
-<?php 
+<?php
 
 namespace App\Controllers;
+
 use Core\Http\Controllers\Controller;
 
 class DashBoardController extends Controller
