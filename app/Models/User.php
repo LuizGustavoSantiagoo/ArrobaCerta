@@ -48,9 +48,15 @@ class User extends Model
         return User::findBy(['email' => $email]);
     }
 
-    public static function validateLogin(string $email, string $password): bool {
+    public static function userStatuses(User $user): string | null
+    {
+        return $user->status;
+    }
+
+    public static function validateLogin(string $email, string $password): bool
+    {
         $user = User::findByEmail($email);
-        return $user !== null && $user->authenticate($password);
+        return $user !== null && $user->authenticate($password) && $user->status === 'active';
     }
 
     public function __set(string $property, mixed $value): void
@@ -61,7 +67,6 @@ class User extends Model
             $property === 'password' &&
             $this->newRecord() &&
             $value !== null && $value !== ''
-
         ) {
             $this->encrypted_password = password_hash($value, PASSWORD_DEFAULT);
         }
