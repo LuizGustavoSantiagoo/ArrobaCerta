@@ -11,7 +11,6 @@ class DashBoardControllerTest extends ControllerTestCase
     public function setUp(): void
     {
         parent::setUp();
-        
         $this->testUser = new User();
         $this->testUser->name = 'Test User';
         $this->testUser->email = 'test@example.com';
@@ -19,7 +18,6 @@ class DashBoardControllerTest extends ControllerTestCase
         $this->testUser->role = 'manager';
         $this->testUser->status = 'active';
         $this->testUser->save();
-        
         $_SESSION['user']['id'] = $this->testUser->id;
     }
 
@@ -30,7 +28,7 @@ class DashBoardControllerTest extends ControllerTestCase
             controllerName: 'App\Controllers\DashBoardController'
         );
 
-        $this->assertStringContainsString('<h1 class="text-center font-bold text-xl">Dashboard</h1>', $response);
-        $this->assertStringContainsString('<p class="text-center font-light">Bem vindo a pagina inicial ' . $this->testUser->name . '.</p>', $response);
+        $this->assertStringContainsString('<h1 class="font-bold text-xl">Dashboard</h1>', $response);
+        $this->assertStringContainsString('<p>Bem vindo a pagina inicial ' . $this->testUser->name . '.</p>', $response);
     }
 }
