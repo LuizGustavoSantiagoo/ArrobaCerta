@@ -1,6 +1,7 @@
 SET foreign_key_checks = 0;
 
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS cattle;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -12,5 +13,20 @@ CREATE TABLE users (
     profile_photo_path VARCHAR(255) NULL,
     UNIQUE KEY uq_users_email (email)
 ) ENGINE=InnoDB;
+
+CREATE TABLE cattle (
+    id INT NOT NULL AUTO_INCREMENT,
+    breed VARCHAR(255) NOT NULL,
+    purchase_value_in_cents decimal NOT NULL,
+    sale_value_in_cents decimal,
+    purchase_date DATETIME NOT NULL,
+    sale_date DATETIME,
+    death_date DATETIME,
+    death_reason VARCHAR(255),
+    state ENUM('active', 'sold', 'dead') NOT NULL DEFAULT 'active',
+    purchase_type VARCHAR(255) NULL,
+    registered_by_user_id INT,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET foreign_key_checks = 1;

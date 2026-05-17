@@ -16,6 +16,26 @@ class Validations
         return true;
     }
 
+    public static function isNumeric($attribute, $obj)
+    {
+        if (!is_numeric($obj->$attribute)) {
+            $obj->addError($attribute, 'deve ser um número!');
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function in($attribute, $obj, $values)
+    {
+        if (!in_array($obj->$attribute, $values)) {
+            $obj->addError($attribute, 'valor inválido!');
+            return false;
+        }
+
+        return true;
+    }
+
     public static function passwordConfirmation($obj)
     {
         if ($obj->password !== $obj->password_confirmation) {

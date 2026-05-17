@@ -14,6 +14,7 @@ use Core\Database\ActiveRecord\Model;
  * @property string $status
  * @property string $profile_photo_path
  */
+
 class User extends Model
 {
     protected static string $table = 'users';

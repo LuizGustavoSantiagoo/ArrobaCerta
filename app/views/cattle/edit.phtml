@@ -1,0 +1,190 @@
+<div class="p-6 max-w-3xl mx-auto">
+    <div class="mb-6">
+        <h1 class="text-3xl font-semibold text-gray-900">Editar Gado</h1>
+        <p class="text-gray-600 text-sm mt-1">Atualize as informações do animal</p>
+    </div>
+    <?php require __DIR__ . '/../layouts/_flash_message.phtml'; ?>
+    <form class="space-y-6" action="<?= route('cattle.update', ['cow_id' => $cattle_data->id]) ?>" method="POST">
+        <div class="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Informações Básicas</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col">
+                    <label for="breed" class="text-sm font-medium text-gray-700 mb-1">Raça</label>
+                    <input type="text" id="breed" name="cattle[breed]"
+                        value="<?= $cattle_data->breed ?? '' ?>"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="state" class="text-sm font-medium text-gray-700 mb-1">Estado</label>
+                    <select id="state" name="cattle[state]"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400 bg-white">
+                        <option value="active" <?= ($cattle_data->state ?? '') === 'active' ? 'selected' : '' ?>>Ativo</option>
+                        <option value="sold" <?= ($cattle_data->state ?? '') === 'sold' ? 'selected' : '' ?>>Vendido</option>
+                        <option value="dead" <?= ($cattle_data->state ?? '') === 'dead' ? 'selected' : '' ?>>Morto</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex flex-col mt-4">
+                <label for="purchase_type" class="text-sm font-medium text-gray-700 mb-1">Tipo de Compra</label>
+                <textarea name="cattle[purchase_type]" id="purchase_type" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"><?= $cattle_data->purchase_type ?? '' ?></textarea>
+            </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Compra</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col">
+                    <label for="purchase_date" class="text-sm font-medium text-gray-700 mb-1">Data de Compra</label>
+                    <input type="date" id="purchase_date" name="cattle[purchase_date]"
+                        value="<?= $cattle_data->purchase_date ? date('Y-m-d', strtotime($cattle_data->purchase_date)) : '' ?>"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="purchase_value_in_cents" class="text-sm font-medium text-gray-700 mb-1">Valor de Compra (R$)</label>
+                    <input type="text" id="purchase_value_in_cents" name="cattle[purchase_value_in_cents]"
+                        value="<?= $cattle_data->getPurchaseValueInReais() ?? 0 ?>"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"
+                        inputmode="decimal" oninput="formatMoneyInput(this, false)" onblur="formatMoneyInput(this, true)">
+                </div>
+            </div>
+        </div>
+
+        <div class="hidden bg-white p-6 rounded-lg border border-gray-200" id="sold-section">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Venda</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col">
+                    <label for="sale_date" class="text-sm font-medium text-gray-700 mb-1">Data de Venda</label>
+                    <input type="datetime-local" id="sale_date" name="cattle[sale_date]"
+                        value="<?= $cattle_data->sale_date ? date('Y-m-d\TH:i', strtotime($cattle_data->sale_date)) : '' ?>"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="sale_value_in_cents" class="text-sm font-medium text-gray-700 mb-1">Valor de Venda (R$)</label>
+                    <input type="text" id="sale_value_in_cents" name="cattle[sale_value_in_cents]"
+                        value="<?= $cattle_data->getSaleValueInReais() ?? 0 ?>"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"
+                        inputmode="decimal" oninput="formatMoneyInput(this, false)" onblur="formatMoneyInput(this, true)">
+                </div>
+            </div>
+        </div>
+
+        <div id="death-section" class="hidden bg-white p-6 rounded-lg border border-gray-200">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Morte</h2>
+
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col">
+                    <label for="death_date" class="text-sm font-medium text-gray-700 mb-1">Data de Morte</label>
+                    <input type="datetime-local" id="death_date" name="cattle[death_date]"
+                        value="<?= $cattle_data->death_date ? date('Y-m-d\TH:i', strtotime($cattle_data->death_date)) : '' ?>"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400">
+                </div>
+
+                <div class="flex flex-col">
+                    <label for="death_reason" class="text-sm font-medium text-gray-700 mb-1">Motivo</label>
+                    <textarea id="death_reason" name="cattle[death_reason]" rows="3"
+                        class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"><?= $cattle_data->death_reason ?? '' ?></textarea>
+                </div>
+
+                <div>
+                    <label for=""></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex gap-3 justify-between">
+            <a href="/cattle" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
+                Voltar
+            </a>
+
+            <div class="flex gap-3">
+                <button type="reset" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
+                    Limpar
+                </button>
+
+                <button type="submit" class="px-4 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition">
+                    Atualizar
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    const saleDateInput = document.getElementById('sale_date');
+    const saleValueInput = document.getElementById('sale_value_in_cents');
+    const soldSection = document.getElementById('sold-section');
+
+    const stateSelect = document.getElementById('state');
+    const deathSection = document.getElementById('death-section');
+    const deathDateInput = document.getElementById('death_date');
+    const deathReasonInput = document.getElementById('death_reason');
+
+    function formatMoneyInput(input, finalize) {
+        if (!input) return;
+
+        let value = input.value || '';
+        value = value.replace(/[^\d,]/g, '');
+
+        if (value === '') {
+            input.value = '';
+            return;
+        }
+
+        const parts = value.split(',');
+        let intPart = parts.shift() || '0';
+        let decPart = parts.join('');
+
+        intPart = intPart.replace(/^0+(?=\d)/, '') || '0';
+        if (decPart.length > 2) decPart = decPart.slice(0, 2);
+
+        const intWithThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        if (finalize) {
+            decPart = (decPart + '00').slice(0, 2);
+            input.value = intWithThousands + ',' + decPart;
+            return;
+        }
+
+        input.value = decPart ? intWithThousands + ',' + decPart : intWithThousands;
+    }
+
+    function updateDeathSection() {
+        if (stateSelect.value === 'dead') {
+            deathSection.classList.remove('hidden');
+            deathDateInput.setAttribute('name', 'cattle[death_date]');
+            deathReasonInput.setAttribute('name', 'cattle[death_reason]');
+        } else {
+            deathSection.classList.add('hidden');
+            deathDateInput.removeAttribute('name');
+            deathReasonInput.removeAttribute('name');
+            deathDateInput.value = '';
+            deathReasonInput.value = '';
+        }
+    }
+
+    stateSelect.addEventListener('change', updateDeathSection);
+    updateDeathSection();
+
+    function updateSoldSection() {
+        if (stateSelect.value === 'sold') {
+            soldSection.classList.remove('hidden');
+            saleDateInput.setAttribute('name', 'cattle[sale_date]');
+            saleValueInput.setAttribute('name', 'cattle[sale_value_in_cents]');
+        } else {
+            soldSection.classList.add('hidden');
+            saleDateInput.removeAttribute('name');
+            saleValueInput.removeAttribute('name');
+            saleDateInput.value = '';
+            saleValueInput.value = '';
+        }
+    }
+
+    stateSelect.addEventListener('change', updateSoldSection);
+    updateSoldSection();
+</script>
