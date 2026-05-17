@@ -5,6 +5,7 @@ namespace Tests\Acceptance;
 use Core\Database\Database;
 use Core\Env\EnvLoader;
 use Tests\Support\AcceptanceTester;
+use Database\Populate\UserPopulate;
 
 class BaseAcceptanceCest
 {
@@ -13,6 +14,7 @@ class BaseAcceptanceCest
         EnvLoader::init();
         Database::create();
         Database::migrate();
+        UserPopulate::populate();
     }
 
     public function _after(AcceptanceTester $page): void
