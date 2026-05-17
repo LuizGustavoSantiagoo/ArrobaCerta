@@ -1,19 +1,18 @@
 <?php foreach (\Lib\FlashMessage::get() as $type => $msg) : ?>
-    <div class="flex items-center justify-between p-4 mb-4 border rounded-lg <?= $type = 'danger' ? 'border-red-500 bg-red-100 text-red-700' : 'border-green-500 bg-green-100 text-green-700' ?>" role="alert">
-    <div class="text-sm font-medium">
-        <?= $msg ?>
+    <div class="flex items-center justify-between p-4 mb-4 border rounded-lg <?php echo $type === 'danger' ? 'border-red-500 bg-red-100 text-red-700' : 'border-green-500 bg-green-100 text-green-700' ?>" role="alert">
+        <div class="text-sm font-medium">
+            <?= $msg ?>
+        </div>
+
+        <button
+            type="button"
+            class="inline-flex items-center justify-center w-8 h-8 p-1.5 ml-3 rounded-lg opacity-70 hover:opacity-100 hover:bg-black/10 focus:ring-2 transition-all <?= $type ?>"
+            aria-label="Close"
+            onclick="this.parentElement.remove();">
+            <span class="sr-only">Fechar</span>
+            <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+        </button>
     </div>
-    
-    <button 
-        type="button" 
-        class="inline-flex items-center justify-center w-8 h-8 p-1.5 ml-3 rounded-lg opacity-70 hover:opacity-100 hover:bg-black/10 focus:ring-2 transition-all <?= $type ?>" 
-        aria-label="Close" 
-        onclick="this.parentElement.remove();"
-    >
-        <span class="sr-only">Fechar</span>
-        <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-        </svg>
-    </button>
-</div>
 <? endforeach; ?>

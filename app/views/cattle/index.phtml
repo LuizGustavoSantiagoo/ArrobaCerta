@@ -1,0 +1,160 @@
+<div>
+    <div class="flex justify-center text-lg">
+        <h1 class="font-bold">Listagem de vacas</h1>
+    </div>
+    <div class="flex justify-center md:justify-end md:mr-3">
+        <button
+            onclick="openCreateCow()"
+            id="closeCreateCow"
+            class="border rounded-lg bg-teal-600 text-white px-4 py-2 hover:bg-teal-400 transition-colors duration-300">
+            Adicionar vacas
+        </button>
+    </div>
+
+    <div class="w-full flex justify-center items-center">
+        <?php
+        require __DIR__ . '/../layouts/_flash_message.phtml';
+        ?>
+    </div>
+
+    <div id="createCow" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="createCowTitle">
+        <div class="absolute inset-0 bg-black/50" onclick="closeCreateCow()">close</div>
+        <div class="relative w-[90%] max-w-3xl bg-white border rounded shadow-lg p-4 flex flex-col gap-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between">
+                <h2 id="createCowTitle" class="text-lg font-semibold">Adicionar vaca</h2>
+                <button type="button" class="text-gray-500 hover:text-gray-700" onclick="closeCreateCow()" aria-label="Fechar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form action="/cattle/store" method="POST">
+                <div class="grid grid-cols-1 md:grid-cols-2 md:gap-4 lg:grid-cols-3">
+                    <div class="flex flex-col">
+                        <label for="breed">Raça</label>
+                        <input class="border rounded focus:border-bold p-2" placeholder="Tipo de animal" name="cattle[breed]" id="breed" type="text">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="purchase_value_in_cents">Valor de compra</label>
+                        <input class="border rounded focus:border-bold p-2" placeholder="Ex: 100000" step="0.01" name="cattle[purchase_value_in_cents]" id="purchase_value_in_cents" type="text" inputmode="decimal" oninput="formatPurchaseValueInput(this, false)" onblur="formatPurchaseValueInput(this, true)">
+                    </div>
+                    <div class="flex flex-col">
+                        <label for="purchase_date">Data de compra</label>
+                        <input class="border rounded focus:border-bold p-2" placeholder="Selecione a data" name="cattle[purchase_date]" id="purchase_date" type="datetime-local">
+                    </div>
+                </div>
+                <div class="flex flex-col">
+                    <label for="purchase_type">Tipo de compra</label>
+                    <textarea class="border rounded focus:border-bold p-2" placeholder="Descreva a compra" name="cattle[purchase_type]" id="purchase_type"></textarea>
+                </div>
+                <div class="flex justify-center">
+                    <button type="submit" class="border rounded-lg bg-teal-600 text-white px-8 py-2 hover:bg-teal-400 transition-colors duration-300">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <section>
+        <div class="w-[90%] mx-auto flex flex-col gap-4 mt-5">
+            <table class="table-auto w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="border">
+                        <th class="border p-2">Raça</th>
+                        <th class="border p-2 hidden md:table-cell">Valor de compra</th>
+                        <th class="border p-2 hidden md:table-cell">Data de compra</th>
+                        <th class="border p-2 hidden md:table-cell">Tipo de compra</th>
+                        <th class="border p-2 hidden lg:table-cell">Status</th>
+                        <th class="border p-2">Ações</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <?php if ($paginator->registers()) {
+                        foreach ($paginator->registers() as $cattle) { ?>
+                            <tr class="border">
+                                <td class="border p-2"><?= $cattle->breed ?></td>
+                                <td class="border p-2 hidden md:table-cell"><?= $cattle->getPurchaseValueInReais() ?></td>
+                                <td class="border p-2 hidden md:table-cell"><?= date('d/m/Y', strtotime($cattle->purchase_date)) ?></td>
+                                <td class="border p-2 hidden md:table-cell"><?= $cattle->purchase_type ?: 'Não informado' ?></td>
+                                <td class="border p-2 hidden lg:table-cell"><?= $cattle->getStateLabel() ?></td>
+                                <td class="p-2 flex justify-evenly">
+                                    <a href="/cattle/edit/<?= $cattle->id ?>" class="bg-amber-500 flex justify-center items-center text-white rounded hover:bg-amber-600 w-10 h-10"><i class="fa-solid fa-pen"></i></a>
+
+                                    <form action="/cattle/destroy/<?= $cattle->id ?>" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir esta vaca?')">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" title="Excluir" class="bg-red-500 text-white rounded hover:bg-red-600 w-10 h-10"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php }
+                    } else { ?>
+                        <tr>
+                            <td colspan="6" class="border p-2 text-center">Nenhuma vaca encontrada.</td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+
+            <?php require __DIR__ . '/../paginator/_pages.phtml'; ?>
+        </div>
+    </section>
+</div>
+
+<script>
+    function formatPurchaseValueInput(input, finalize) {
+        if (!input) return;
+
+        let value = input.value || '';
+        value = value.replace(/[^\d,]/g, '');
+
+        if (value === '') {
+            input.value = '';
+            return;
+        }
+
+        const parts = value.split(',');
+        let intPart = parts.shift() || '0';
+        let decPart = parts.join('');
+
+        intPart = intPart.replace(/^0+(?=\d)/, '') || '0';
+        if (decPart.length > 2) decPart = decPart.slice(0, 2);
+
+        const intWithThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+        if (finalize) {
+            decPart = (decPart + '00').slice(0, 2);
+            input.value = intWithThousands + ',' + decPart;
+            return;
+        }
+
+        input.value = decPart ? intWithThousands + ',' + decPart : intWithThousands;
+    }
+
+    function openCreateCow() {
+        const createCow = document.getElementById('createCow');
+        const closeCreateCow = document.getElementById('closeCreateCow');
+        const isHidden = createCow.classList.contains('hidden');
+
+        if (isHidden) {
+            createCow.classList.remove('hidden');
+            closeCreateCow.textContent = 'Fechar';
+            return;
+        }
+
+        createCow.classList.add('hidden');
+        closeCreateCow.textContent = 'Adicionar vacas';
+    }
+
+    function closeCreateCow() {
+        const createCow = document.getElementById('createCow');
+        const closeCreateCow = document.getElementById('closeCreateCow');
+
+        if (!createCow.classList.contains('hidden')) {
+            createCow.classList.add('hidden');
+            closeCreateCow.textContent = 'Adicionar vacas';
+        }
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') closeCreateCow();
+    });
+</script>
