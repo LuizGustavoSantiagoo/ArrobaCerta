@@ -18,11 +18,14 @@ class CattlePhotosCest extends BaseAcceptanceCest
 
         $page->login(self::USER_EMAIL, self::USER_PASSWORD);
         $page->amOnPage("/cattle/{$cattle->id}/edit");
+        $page->waitForText('Editar Gado', 10);
         $page->click('Fotos');
 
         $page->attachFile('input[name=foto]', 'foto-test.png');
         $page->selectOption('#type', 'cattle');
         $page->click('Enviar');
+
+        $page->waitForText('Foto enviada com sucesso!', 15);
 
         $page->click('Fotos');
         $page->seeNumberOfElements('#photos-gallery select', 1);
@@ -61,7 +64,7 @@ class CattlePhotosCest extends BaseAcceptanceCest
 
         $page->selectOption('#photos-gallery select', 'foto do obito');
         $page->click('#photos-gallery button.bg-green-500');
-        $page->waitForText('Tipo atualizado com sucesso!', 30);
+        $page->waitForText('Tipo atualizado com sucesso!', 15);
 
         $page->click('Fotos');
         $page->seeOptionIsSelected('#photos-gallery select', 'foto do obito');
