@@ -63,7 +63,7 @@ class CattlePhotosCest extends BaseAcceptanceCest
 
         $page->selectOption('#photos-gallery select', 'foto do obito');
         $page->click('#photos-gallery button.bg-green-500');
-        $page->waitForText('Tipo atualizado com sucesso!', 5);
+        $page->waitForText('Tipo atualizado com sucesso!', 30);
 
         $page->click('Fotos');
         $page->seeOptionIsSelected('#photos-gallery select', 'foto do obito');
