@@ -3,6 +3,7 @@
 namespace Tests\Unit\Models\Cattle;
 
 use App\Models\Cattle;
+use App\Models\User;
 use Tests\TestCase;
 
 class CattleTest extends TestCase
@@ -10,10 +11,21 @@ class CattleTest extends TestCase
     private Cattle $cattle;
     private Cattle $cattle2;
     private Cattle $cattle3;
+    private User $user;
 
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->user = new User([
+            'name' => 'User 1',
+            'email' => 'fulano@example.com',
+            'password' => '123456',
+            'password_confirmation' => '123456',
+            'role' => 'manager',
+            'status' => 'active'
+        ]);
+        $this->user->save();
 
         $this->cattle = new Cattle([
             'breed' => 'Angus',
