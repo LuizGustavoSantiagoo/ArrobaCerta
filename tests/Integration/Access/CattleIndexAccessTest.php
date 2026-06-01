@@ -27,7 +27,7 @@ class CattleIndexAccessTest extends TestCase
 
     public function test_should_access_cattle_edit_route_not_autheticated(): void
     {
-        $response = $this->client->get('/cattle/edit/1');
+        $response = $this->client->get('/cattle/1/edit');
 
         $this->assertEquals(302, $response->getStatusCode());
     }

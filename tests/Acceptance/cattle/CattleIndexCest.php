@@ -73,7 +73,7 @@ class CattleIndexCest extends BaseAcceptanceCest
         $page->waitForText('Gado salvo com sucesso!', 5);
         $page->see('Gado salvo com sucesso!');
 
-        $page->click('a[href^="/cattle/edit/"]');
+        $page->click('a[href$="/edit"]');
         $page->waitForElementVisible('#breed', 5);
         $page->see('Editar Gado', '//h1');
         $page->fillField('cattle[breed]', '');
@@ -106,7 +106,7 @@ class CattleIndexCest extends BaseAcceptanceCest
         $page->waitForText('Gado salvo com sucesso!', 5);
         $page->see('Gado salvo com sucesso!');
 
-        $page->click('a[href^="/cattle/edit/"]');
+        $page->click('a[href$="/edit"]');
         $page->waitForElementVisible('#breed', 5);
         $page->see('Editar Gado', '//h1');
         $page->fillField('cattle[breed]', 'nelore-03-updated');
