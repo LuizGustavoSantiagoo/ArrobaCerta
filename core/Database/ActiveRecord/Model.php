@@ -188,6 +188,14 @@ abstract class Model
      */
     public function update(array $data): bool
     {
+        foreach ($data as $column => $value) {
+            $this->$column = $value;
+        }
+
+        if (!$this->isValid()) {
+            return false;
+        }
+
         $table = static::$table;
 
         $sets = array_map(function ($column) {
@@ -204,8 +212,7 @@ abstract class Model
         $stmt->bindValue(':id', $this->id);
 
         foreach ($data as $column => $value) {
-            $stmt->bindValue($column, $value);
-            $this->$column = $value;
+            $stmt->bindValue($column, $this->$column);
         }
 
         $stmt->execute();
