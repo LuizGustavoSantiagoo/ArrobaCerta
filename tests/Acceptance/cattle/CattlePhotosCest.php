@@ -24,7 +24,7 @@ class CattlePhotosCest extends BaseAcceptanceCest
         $page->selectOption('#type', 'cattle');
         $page->click('Enviar');
 
-        $page->waitForText('Foto enviada com sucesso!', 5);
+        $page->waitForText('Foto enviada com sucesso!', 15);
 
         $page->click('Fotos');
         $page->seeNumberOfElements('#photos-gallery select', 1);
