@@ -1,10 +1,21 @@
-<div class="p-6 max-w-3xl mx-auto">
+<div class="tab border rounded border-gray-200 mb-2 shadow w-[60%] p-2 mx-auto flex flex-row justify-between">
+    <div>
+        <button class="tablinks active px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" onclick="openPage(event, 'info')">Informações</button>
+        <button class="tablinks px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" onclick="openPage(event, 'photos')">Fotos</button>
+    </div>
+    <a href="/cattle" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
+        Voltar
+    </a>
+</div>
+
+<div id="info" class="tabcontent active shadow w-[80%] mx-auto p-6">
     <div class="mb-6">
         <h1 class="text-3xl font-semibold text-gray-900">Editar Gado</h1>
         <p class="text-gray-600 text-sm mt-1">Atualize as informações do animal</p>
     </div>
-    <?php require __DIR__ . '/../layouts/_flash_message.phtml'; ?>
-    <form class="space-y-6" action="<?= route('cattle.update', ['cow_id' => $cattle_data->id]) ?>" method="POST">
+
+    <form class="space-y-6" action="<?= route('cattle.update', ['id' => $cattle_data->id]) ?>" method="POST">
+        <input type="hidden" name="_method" value="PUT">
         <div class="bg-white p-6 rounded-lg border border-gray-200">
             <h2 class="text-lg font-medium text-gray-900 mb-4">Informações Básicas</h2>
 
@@ -98,10 +109,6 @@
         </div>
 
         <div class="flex gap-3 justify-between">
-            <a href="/cattle" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
-                Voltar
-            </a>
-
             <div class="flex gap-3">
                 <button type="reset" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
                     Limpar
@@ -115,76 +122,76 @@
     </form>
 </div>
 
-<script>
-    const saleDateInput = document.getElementById('sale_date');
-    const saleValueInput = document.getElementById('sale_value_in_cents');
-    const soldSection = document.getElementById('sold-section');
+<div id="photos" class="tabcontent shadow w-[80%] mx-auto p-6">
+    <div class="mb-6">
+        <h1 class="text-3xl font-semibold text-gray-900">Fotos do Animal</h1>
+        <p class="text-gray-600 text-sm mt-1">Adicione fotos do animal ou registros de óbito</p>
+    </div>
 
-    const stateSelect = document.getElementById('state');
-    const deathSection = document.getElementById('death-section');
-    const deathDateInput = document.getElementById('death_date');
-    const deathReasonInput = document.getElementById('death_reason');
+    <form action="<?= route('cattleimages.create') ?>" method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div class="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 class="text-lg font-medium text-gray-900 mb-4">Enviar Nova Foto</h2>
 
-    function formatMoneyInput(input, finalize) {
-        if (!input) return;
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col">
+                    <label for="cattle_id" class="text-sm font-medium text-gray-700 mb-1">ID do Animal</label>
+                    <input type="text" id="cattle_id" value="<?= $cattle_data->id ?>" disabled
+                        class="px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-700 cursor-not-allowed">
+                    <input type="hidden" name="cattle_id" value="<?= $cattle_data->id ?>">
+                </div>
 
-        let value = input.value || '';
-        value = value.replace(/[^\d,]/g, '');
+                <div class="flex flex-col">
+                    <label for="type" class="text-sm font-medium text-gray-700 mb-1">Tipo de Foto</label>
+                    <select name="type" id="type"
+                        class="px-3 py-2 border border-gray-300 rounded-md bg-white text-gray-700 focus:outline-none focus:ring-1 focus:ring-gray-400">
+                        <option value="cattle">Foto da vaca</option>
+                        <option value="death_photo">Foto do óbito</option>
+                    </select>
+                </div>
+            </div>
 
-        if (value === '') {
-            input.value = '';
-            return;
-        }
+            <div class="flex flex-col mt-4">
+                <label class="text-sm font-medium text-gray-700 mb-1">Arquivo</label>
+                <label class="flex items-center px-3 py-2 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition">
+                    <input type="file" require name="foto" class="hidden" onchange="document.getElementById('selected-file-name').textContent = this.files.length ? this.files[0].name : 'Selecionar arquivo'" />
+                    <span id="selected-file-name" class="text-sm text-gray-700">Selecionar arquivo</span>
+                </label>
+            </div>
+        </div>
 
-        const parts = value.split(',');
-        let intPart = parts.shift() || '0';
-        let decPart = parts.join('');
+        <div class="flex gap-3 justify-end">
+            <button type="submit" class="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition">
+                Enviar
+            </button>
+        </div>
+    </form>
 
-        intPart = intPart.replace(/^0+(?=\d)/, '') || '0';
-        if (decPart.length > 2) decPart = decPart.slice(0, 2);
+    <div id="photos-gallery" class="my-3 flex flex-row flex-wrap gap-2">
+        <?php if ($cattle_data->photos) : ?>
+            <?php foreach ($cattle_data->photos as $photo) : ?>
+                <div class="photo-card border rounded p-2 flex flex-col w-[20%] text-center">
+                    <form action="<?= route('cattleimages.update', ['id' => $photo->id]) ?>" method="post">
+                        <input type="hidden" name="_method" value="PUT">
+                        <select class="border rounded my-2 w-full" name="type">
+                            <option value="cattle" <?= $photo->type === 'cattle' ? 'selected' : '' ?>>foto da vaca</option>
+                            <option value="death_photo" <?= $photo->type === 'death_photo' ? 'selected' : '' ?>>foto do obito</option>
+                        </select>
+                        <img id="image<?= $photo->id ?>" src="<?= $photo->file_path ?>" alt="Foto do animal <?= $cattle_data->id ?>">
+                        <button type="submit" class="rounded p-2 m-1 text-white bg-green-500">
+                            Salvar
+                        </button>
+                    </form>
 
-        const intWithThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-        if (finalize) {
-            decPart = (decPart + '00').slice(0, 2);
-            input.value = intWithThousands + ',' + decPart;
-            return;
-        }
-
-        input.value = decPart ? intWithThousands + ',' + decPart : intWithThousands;
-    }
-
-    function updateDeathSection() {
-        if (stateSelect.value === 'dead') {
-            deathSection.classList.remove('hidden');
-            deathDateInput.setAttribute('name', 'cattle[death_date]');
-            deathReasonInput.setAttribute('name', 'cattle[death_reason]');
-        } else {
-            deathSection.classList.add('hidden');
-            deathDateInput.removeAttribute('name');
-            deathReasonInput.removeAttribute('name');
-            deathDateInput.value = '';
-            deathReasonInput.value = '';
-        }
-    }
-
-    stateSelect.addEventListener('change', updateDeathSection);
-    updateDeathSection();
-
-    function updateSoldSection() {
-        if (stateSelect.value === 'sold') {
-            soldSection.classList.remove('hidden');
-            saleDateInput.setAttribute('name', 'cattle[sale_date]');
-            saleValueInput.setAttribute('name', 'cattle[sale_value_in_cents]');
-        } else {
-            soldSection.classList.add('hidden');
-            saleDateInput.removeAttribute('name');
-            saleValueInput.removeAttribute('name');
-            saleDateInput.value = '';
-            saleValueInput.value = '';
-        }
-    }
-
-    stateSelect.addEventListener('change', updateSoldSection);
-    updateSoldSection();
-</script>
+                    <form action="<?= route('cattleimages.destroy', ['id' => $photo->id]) ?>" method="post" onsubmit="return confirm('Tem certeza que deseja excluir esta foto?')">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit" class="rounded p-2 m-1 text-white bg-red-500">
+                            Deletar
+                        </button>
+                    </form>
+                </div>
+            <?php endforeach; ?>
+        <?php else : ?>
+            <h2>Nenhuma foto encontrada!</h2>
+        <?php endif; ?>
+    </div>
+</div>

@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arrobacerta - Dashboard</title>
+    <script src="/assets/js/application.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/css/application.css" />
 </head>
 
 <body>
@@ -19,10 +21,11 @@
                 </svg>
             </button>
 
-            <div class="hidden md:block group relative bg-gray-700 text-gray-300 p-2 rounded-lg mr-4 xs:right-4 md:right-4 md:fixed lg:right-4 lg:fixed cursor-pointer">
+            <div class="hidden md:block group relative ml-auto mr-4 cursor-pointer">
 
-                <?= $user->profile_photo_path ??
-                    '<i class="fa-solid fa-user font-bold"></i>' ?>
+                <div class="w-10 h-10 flex items-center justify-center rounded-full bg-gray-700 text-gray-200">
+                    <i class="fa-solid fa-user font-bold"></i>
+                </div>
 
                 <div class="hidden group-hover:block absolute right-0 top-full mt-2 w-60 bg-white rounded-md shadow-lg py-1 z-50 text-gray-800 p-2">
                     <div><span class="font-bold">Name:</span> <?= $user->name ?></div>
@@ -68,6 +71,9 @@
             </aside>
         </header>
 
+        <div class="w-[80%] mx-auto">
+            <?php require __DIR__ . '/../layouts/_flash_message.phtml'; ?>
+        </div>
         <?php require $view ?>
 
     </main>

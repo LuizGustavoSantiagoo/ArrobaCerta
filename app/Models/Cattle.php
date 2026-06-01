@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\ImagesService;
+use Core\Database\ActiveRecord\HasMany;
 use Lib\Validations;
 use Core\Database\ActiveRecord\Model;
 
@@ -17,6 +19,7 @@ use Core\Database\ActiveRecord\Model;
  * @property string $state
  * @property string $purchase_type
  * @property string $registered_by_user_id
+ * @property CattleImages[] $photos
  */
 
 class Cattle extends Model
@@ -54,12 +57,17 @@ class Cattle extends Model
         }
     }
 
-    public function setRealValueInCents(string $priceInCents): int
+    public function photos(): HasMany
+    {
+        return $this->hasMany(CattleImages::class, 'cattle_id');
+    }
+
+    public function setRealValueInCents(string $property, string $priceInCents): void
     {
         $priceInCents = trim($priceInCents);
 
         if (empty($priceInCents)) {
-            return 0;
+            return;
         }
 
         $cleanValue = str_replace('.', '', $priceInCents);
@@ -72,19 +80,25 @@ class Cattle extends Model
             $normalizedValue = 0;
         }
 
-        return $normalizedValue;
+        if ($property === 'sale_value_in_cents') {
+            parent::__set('sale_value_in_cents', $normalizedValue);
+        }
+
+        if ($property === 'purchase_value_in_cents') {
+            parent::__set('purchase_value_in_cents', $normalizedValue);
+        }
     }
 
     public function getPurchaseValueInReais(): string
     {
         $value = (int)$this->purchase_value_in_cents / 100;
-        return number_format($value, 2, ',', '.');
+        return $this->purchase_value_in_cents = number_format($value, 2, ',', '.');
     }
 
     public function getSaleValueInReais(): string
     {
         $value = (int)$this->sale_value_in_cents / 100;
-        return number_format($value, 2, ',', '.');
+        return $this->sale_value_in_cents = number_format($value, 2, ',', '.');
     }
 
     public function getStateLabel(): string
@@ -97,14 +111,20 @@ class Cattle extends Model
         };
     }
 
+    public function cattleImages(): ImagesService
+    {
+        return new ImagesService($this, ['extension' => ['png', 'jpeg'], 'size' => 2 * 1024 * 1024]);
+    }
+
     public function __set(string $property, mixed $value): void
     {
-
         if (
-            $property === 'purchase_value_in_cents'  &&
-            $this->newRecord()
+            in_array($property, ['purchase_value_in_cents', 'sale_value_in_cents'], true) &&
+            is_string($value) &&
+            !ctype_digit($value)
         ) {
-            $value = $this->setRealValueInCents($value);
+            $this->setRealValueInCents($property, $value);
+            return;
         }
 
         parent::__set($property, $value);

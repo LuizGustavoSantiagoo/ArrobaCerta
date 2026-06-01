@@ -34,7 +34,7 @@ class CattleController extends Controller
         $this->render('cattle/index', compact('user', 'title', 'paginator'));
     }
 
-    public function store(Request $request): void
+    public function create(Request $request): void
     {
         $params = $request->getParam('cattle');
         $params['state'] = 'active';
@@ -52,8 +52,7 @@ class CattleController extends Controller
 
     public function update(Request $request): void
     {
-        $params = $request->getParam('cattle');
-        $cattle = Cattle::findById($request->getParam('cow_id'));
+        $cattle = Cattle::findById($request->getParam('id'));
 
         if (!$cattle) {
             FlashMessage::danger('Gado não encontrado.');
@@ -61,29 +60,12 @@ class CattleController extends Controller
             return;
         }
 
-        $cattle->breed = $params['breed'] ?? null;
-        $cattle->purchase_date = $params['purchase_date'] ?? null;
-        $cattle->purchase_type = $params['purchase_type'] ?? null;
-        $cattle->state = $params['state'] ?? null;
-
-        $cattle->purchase_value_in_cents = isset($params['purchase_value_in_cents']) && $params['purchase_value_in_cents'] !== ''
-            ? (string)$cattle->setRealValueInCents($params['purchase_value_in_cents'])
-            : null;
-
-        $cattle->sale_value_in_cents = isset($params['sale_value_in_cents']) && $params['sale_value_in_cents'] !== ''
-            ? (string)$cattle->setRealValueInCents($params['sale_value_in_cents'])
-            : null;
-
-        $cattle->sale_date = $params['sale_date'] ?? null;
-        $cattle->death_date = $params['death_date'] ?? null;
-        $cattle->death_reason = $params['death_reason'] ?? null;
-
-        if ($cattle->save()) {
+        if ($cattle->update($request->getParam('cattle'))) {
             FlashMessage::success('Gado atualizado com sucesso!');
-            $this->redirectTo(route('cattle.edit', ['cow_id' => $cattle->id]));
+            $this->redirectTo(route('cattle.edit', ['id' => $cattle->id]));
         } else {
             FlashMessage::danger('Erro ao atualizar o gado. Verifique os dados e tente novamente.');
-            $this->redirectTo(route('cattle.edit', ['cow_id' => $cattle->id]));
+            $this->redirectTo(route('cattle.edit', ['id' => $cattle->id]));
         }
     }
 
@@ -91,7 +73,7 @@ class CattleController extends Controller
     {
         $title = "Editar Gado";
         $user = $this->current_user->findBy(['id' => $this->current_user->id]);
-        $cattle_data = Cattle::findById($request->getParam('cow_id'));
+        $cattle_data = Cattle::findById($request->getParam('id'));
 
         if (!$cattle_data) {
             FlashMessage::danger('Gado não encontrado.');
@@ -105,12 +87,16 @@ class CattleController extends Controller
     public function destroy(Request $request): void
     {
 
-        $cattle = Cattle::findById((int)$request->getParam('cow_id'));
+        $cattle = Cattle::findById($request->getParam('id'));
 
         if (!$cattle) {
             FlashMessage::danger('Gado não encontrado.');
             $this->redirectTo(route('cattle.index'));
             return;
+        }
+
+        foreach ($cattle->photos as $photo) {
+            $cattle->cattleImages()->destroy($photo);
         }
 
         if ($cattle->destroy()) {
@@ -119,8 +105,8 @@ class CattleController extends Controller
         } else {
             FlashMessage::danger('Erro ao deletar o gado. Tente novamente.');
         }
-        $this->redirectBack();
 
+        $this->redirectBack();
         $this->redirectTo(route('cattle.index'));
     }
 }
