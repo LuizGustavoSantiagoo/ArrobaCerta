@@ -5,6 +5,7 @@ use App\Controllers\DashBoardController;
 use App\Controllers\AuthenticationsController;
 use App\Controllers\CattleController;
 use App\Controllers\CattleImagesController;
+use App\Controllers\CattleVaccinesController;
 use Core\Router\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('root');
@@ -25,4 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/cattleimages', [CattleImagesController::class, 'create'])->name('cattleimages.create');
     Route::put('/cattleimages/{id}', [CattleImagesController::class, 'update'])->name('cattleimages.update');
     Route::delete('/cattleimages/{id}', [CattleImagesController::class, 'destroy'])->name('cattleimages.destroy');
+
+    // cattle vaccines routes
+    Route::post('/cattle/vaccines/add', [CattleVaccinesController::class, 'store'])->name('cattlevaccines.store');
+    Route::post('/cattle/vaccines/remove', [CattleVaccinesController::class, 'destroy'])->name('cattlevaccines.destroy');
 });

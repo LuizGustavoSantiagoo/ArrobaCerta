@@ -3,6 +3,8 @@ SET foreign_key_checks = 0;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS cattle;
 DROP TABLE IF EXISTS cattle_images;
+DROP TABLE IF EXISTS cattle_vaccines;
+DROP TABLE IF EXISTS vaccines;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -40,6 +42,22 @@ CREATE TABLE cattle_images (
     registered_by_id INT NOT NULL,
     CONSTRAINT fk_cattle_images_cattle FOREIGN KEY (cattle_id) REFERENCES cattle(id),
     CONSTRAINT fk_cattle_images_user FOREIGN KEY (registered_by_id) REFERENCES users(id)
+);
+
+CREATE TABLE vaccines (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT DEFAULT NULL
+);
+
+CREATE TABLE cattle_vaccines (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cattle_id INT NOT NULL,
+    vaccine_id INT NOT NULL,
+    application_date DATE NOT NULL,
+    
+    FOREIGN KEY (cattle_id) REFERENCES cattle(id) ON DELETE CASCADE,
+    FOREIGN KEY (vaccine_id) REFERENCES vaccines(id) ON DELETE CASCADE
 );
 
 SET foreign_key_checks = 1;

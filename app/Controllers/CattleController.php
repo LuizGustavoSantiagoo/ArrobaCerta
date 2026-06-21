@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\Cattle;
+use App\Models\Vaccine;
 use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
@@ -81,7 +82,9 @@ class CattleController extends Controller
             return;
         }
 
-        $this->render('cattle/edit', compact('cattle_data', 'title', 'user'));
+        $allVaccines = Vaccine::all();
+
+        $this->render('cattle/edit', compact('cattle_data', 'title', 'user', 'allVaccines'));
     }
 
     public function destroy(Request $request): void

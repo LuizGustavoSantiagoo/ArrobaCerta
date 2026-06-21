@@ -32,7 +32,9 @@ class BelongsToMany
 
         $sql = <<<SQL
             SELECT 
-                {$attributes}
+                {$attributes},
+                {$this->pivot_table}.application_date as pivot_application_date,
+                {$this->pivot_table}.id as pivot_id
             FROM 
                 {$fromTable}, {$toTable}, {$this->pivot_table}
             WHERE 
@@ -50,7 +52,12 @@ class BelongsToMany
 
         $models = [];
         foreach ($rows as $row) {
-            $models[] = new $this->related($row);
+            $obj = new $this->related($row);
+            
+            $obj->pivot_application_date = $row['pivot_application_date'] ?? null;
+            $obj->pivot_id = $row['pivot_id'] ?? null;
+            
+            $models[] = $obj;
         }
 
         return $models;
@@ -79,5 +86,49 @@ class BelongsToMany
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return $rows[0]['total'];
+    }
+
+    /**
+     * * @param int $relatedId
+     * @param array<string, mixed> $extraData
+     * @return bool
+     */
+    public function attach(int $relatedId, array $extraData = []): bool
+    {
+        $pdo = Database::getDatabaseConn();
+
+        $columns = [$this->from_foreign_key, $this->to_foreign_key];
+        $values = [':from_id', ':to_id'];
+        $params = [
+            'from_id' => $this->model->id,
+            'to_id' => $relatedId
+        ];
+
+        foreach ($extraData as $column => $value) {
+            $columns[] = $column;
+            $values[] = ":{$column}";
+            $params[$column] = $value;
+        }
+
+        $colsStr = implode(', ', $columns);
+        $valsStr = implode(', ', $values);
+
+        $sql = "INSERT INTO {$this->pivot_table} ({$colsStr}) VALUES ({$valsStr})";
+
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+    public function detach(int $relatedId): bool
+    {
+        $pdo = Database::getDatabaseConn();
+        $sql = "DELETE FROM {$this->pivot_table} 
+                WHERE {$this->from_foreign_key} = :from_id AND {$this->to_foreign_key} = :to_id";
+        
+        $stmt = $pdo->prepare($sql);
+        return $stmt->execute([
+            'from_id' => $this->model->id,
+            'to_id' => $relatedId
+        ]);
     }
 }
