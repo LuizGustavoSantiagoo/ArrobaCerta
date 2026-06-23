@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Core\Database\ActiveRecord\BelongsToMany;
 use App\Services\ImagesService;
 use Core\Database\ActiveRecord\HasMany;
 use Lib\Validations;
@@ -128,5 +129,16 @@ class Cattle extends Model
         }
 
         parent::__set($property, $value);
+    }
+
+    public function vaccines(): BelongsToMany
+    {
+        return new BelongsToMany(
+            model: $this,
+            related: Vaccine::class,
+            pivot_table: 'cattle_vaccines',
+            from_foreign_key: 'cattle_id',
+            to_foreign_key: 'vaccine_id'
+        );
     }
 }
