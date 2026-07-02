@@ -1,8 +1,12 @@
 <div class="tab border rounded border-gray-200 mb-2 shadow w-[60%] p-2 mx-auto flex flex-row justify-between">
     <div>
-        <button class="tablinks active px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" onclick="openPage(event, 'info')">Informações</button>
-        <button class="tablinks px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" onclick="openPage(event, 'photos')">Fotos</button>
-        <button class="tablinks px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition" onclick="openPage(event, 'vaccines')">Vacinas</button>
+        <button
+            class="tablinks active px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
+            onclick="openPage(event, 'info')">Informações</button>
+        <button class="tablinks px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
+            onclick="openPage(event, 'photos')">Fotos</button>
+        <button class="tablinks px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition"
+            onclick="openPage(event, 'vaccines')">Vacinas</button>
     </div>
     <a href="/cattle" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
         Voltar
@@ -23,8 +27,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="flex flex-col">
                     <label for="breed" class="text-sm font-medium text-gray-700 mb-1">Raça</label>
-                    <input type="text" id="breed" name="cattle[breed]"
-                        value="<?= $cattle_data->breed ?? '' ?>"
+                    <input type="text" id="breed" name="cattle[breed]" value="<?= $cattle_data->breed ?? '' ?>"
                         class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400">
                 </div>
 
@@ -32,15 +35,18 @@
                     <label for="state" class="text-sm font-medium text-gray-700 mb-1">Estado</label>
                     <select id="state" name="cattle[state]"
                         class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400 bg-white">
-                        <option value="active" <?= ($cattle_data->state ?? '') === 'active' ? 'selected' : '' ?>>Ativo</option>
-                        <option value="sold" <?= ($cattle_data->state ?? '') === 'sold' ? 'selected' : '' ?>>Vendido</option>
+                        <option value="active" <?= ($cattle_data->state ?? '') === 'active' ? 'selected' : '' ?>>Ativo
+                        </option>
+                        <option value="sold" <?= ($cattle_data->state ?? '') === 'sold' ? 'selected' : '' ?>>Vendido
+                        </option>
                         <option value="dead" <?= ($cattle_data->state ?? '') === 'dead' ? 'selected' : '' ?>>Morto</option>
                     </select>
                 </div>
             </div>
             <div class="flex flex-col mt-4">
                 <label for="purchase_type" class="text-sm font-medium text-gray-700 mb-1">Tipo de Compra</label>
-                <textarea name="cattle[purchase_type]" id="purchase_type" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"><?= $cattle_data->purchase_type ?? '' ?></textarea>
+                <textarea name="cattle[purchase_type]" id="purchase_type"
+                    class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"><?= $cattle_data->purchase_type ?? '' ?></textarea>
             </div>
         </div>
 
@@ -56,11 +62,13 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <label for="purchase_value_in_cents" class="text-sm font-medium text-gray-700 mb-1">Valor de Compra (R$)</label>
+                    <label for="purchase_value_in_cents" class="text-sm font-medium text-gray-700 mb-1">Valor de Compra
+                        (R$)</label>
                     <input type="text" id="purchase_value_in_cents" name="cattle[purchase_value_in_cents]"
                         value="<?= $cattle_data->getPurchaseValueInReais() ?? 0 ?>"
                         class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"
-                        inputmode="decimal" oninput="formatMoneyInput(this, false)" onblur="formatMoneyInput(this, true)">
+                        inputmode="decimal" oninput="formatMoneyInput(this, false)"
+                        onblur="formatMoneyInput(this, true)">
                 </div>
             </div>
         </div>
@@ -77,11 +85,13 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <label for="sale_value_in_cents" class="text-sm font-medium text-gray-700 mb-1">Valor de Venda (R$)</label>
+                    <label for="sale_value_in_cents" class="text-sm font-medium text-gray-700 mb-1">Valor de Venda
+                        (R$)</label>
                     <input type="text" id="sale_value_in_cents" name="cattle[sale_value_in_cents]"
                         value="<?= $cattle_data->getSaleValueInReais() ?? 0 ?>"
                         class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400"
-                        inputmode="decimal" oninput="formatMoneyInput(this, false)" onblur="formatMoneyInput(this, true)">
+                        inputmode="decimal" oninput="formatMoneyInput(this, false)"
+                        onblur="formatMoneyInput(this, true)">
                 </div>
             </div>
         </div>
@@ -111,7 +121,8 @@
 
         <div class="flex gap-3 justify-between">
             <div class="flex gap-3">
-                <button type="reset" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
+                <button type="reset"
+                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
                     Limpar
                 </button>
 
@@ -121,6 +132,35 @@
             </div>
         </div>
     </form>
+
+    <form action="<?= route('tag.create', ['id' => $cattle_data->id]) ?>" method="post">
+        <div class="flex flex-col">
+
+            <input type="date" name="tag[date]">
+
+            <label for="tag">Tags</label>
+            <select name="tag[tags][]" id="tag" multiple>
+                <option value="1">reproduzir</option>
+                <option value="2">matriz</option>
+                <option value="3">confinamento</option>
+                <option value="4">venda</option>
+                <option value="5">obervação</option>
+                <option value="6">isolamento</option>
+            </select>
+            <button type="submit">
+                salvar tag
+            </button>
+        </div>
+    </form>
+
+    <?=
+        $tags = $cattle_data->tags();
+
+        foreach($tags as $tag) {
+            echo '<p>'.$tag.'</p>';
+        }
+    ?>
+
 </div>
 
 <div id="photos" class="tabcontent shadow w-[80%] mx-auto p-6">
@@ -153,37 +193,43 @@
 
             <div class="flex flex-col mt-4">
                 <label class="text-sm font-medium text-gray-700 mb-1">Arquivo</label>
-                <label class="flex items-center px-3 py-2 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition">
-                    <input type="file" require name="foto" class="hidden" onchange="document.getElementById('selected-file-name').textContent = this.files.length ? this.files[0].name : 'Selecionar arquivo'" />
+                <label
+                    class="flex items-center px-3 py-2 bg-white border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 transition">
+                    <input type="file" require name="foto" class="hidden"
+                        onchange="document.getElementById('selected-file-name').textContent = this.files.length ? this.files[0].name : 'Selecionar arquivo'" />
                     <span id="selected-file-name" class="text-sm text-gray-700">Selecionar arquivo</span>
                 </label>
             </div>
         </div>
 
         <div class="flex gap-3 justify-end">
-            <button type="submit" class="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition">
+            <button type="submit"
+                class="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition">
                 Enviar
             </button>
         </div>
     </form>
 
     <div id="photos-gallery" class="my-3 flex flex-row flex-wrap gap-2">
-        <?php if ($cattle_data->photos) : ?>
-            <?php foreach ($cattle_data->photos as $photo) : ?>
+        <?php if ($cattle_data->photos): ?>
+            <?php foreach ($cattle_data->photos as $photo): ?>
                 <div class="photo-card border rounded p-2 flex flex-col w-[20%] text-center">
                     <form action="<?= route('cattleimages.update', ['id' => $photo->id]) ?>" method="post">
                         <input type="hidden" name="_method" value="PUT">
                         <select class="border rounded my-2 w-full" name="type">
                             <option value="cattle" <?= $photo->type === 'cattle' ? 'selected' : '' ?>>foto da vaca</option>
-                            <option value="death_photo" <?= $photo->type === 'death_photo' ? 'selected' : '' ?>>foto do obito</option>
+                            <option value="death_photo" <?= $photo->type === 'death_photo' ? 'selected' : '' ?>>foto do obito
+                            </option>
                         </select>
-                        <img id="image<?= $photo->id ?>" src="<?= $photo->file_path ?>" alt="Foto do animal <?= $cattle_data->id ?>">
+                        <img id="image<?= $photo->id ?>" src="<?= $photo->file_path ?>"
+                            alt="Foto do animal <?= $cattle_data->id ?>">
                         <button type="submit" class="rounded p-2 m-1 text-white bg-green-500">
                             Salvar
                         </button>
                     </form>
 
-                    <form action="<?= route('cattleimages.destroy', ['id' => $photo->id]) ?>" method="post" onsubmit="return confirm('Tem certeza que deseja excluir esta foto?')">
+                    <form action="<?= route('cattleimages.destroy', ['id' => $photo->id]) ?>" method="post"
+                        onsubmit="return confirm('Tem certeza que deseja excluir esta foto?')">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" class="rounded p-2 m-1 text-white bg-red-500">
                             Deletar
@@ -191,7 +237,7 @@
                     </form>
                 </div>
             <?php endforeach; ?>
-        <?php else : ?>
+        <?php else: ?>
             <h2>Nenhuma foto encontrada!</h2>
         <?php endif; ?>
     </div>
@@ -205,7 +251,7 @@
 
     <form action="<?= route('cattlevaccines.store') ?>" method="POST" class="space-y-6">
         <input type="hidden" name="cattle_id" value="<?= $cattle_data->id ?>">
-        
+
         <div class="bg-white p-6 rounded-lg border border-gray-200">
             <h2 class="text-lg font-medium text-gray-900 mb-4">Registrar Nova Vacina</h2>
 
@@ -224,14 +270,16 @@
                 </div>
 
                 <div class="flex flex-col">
-                    <label for="application_date" class="text-sm font-medium text-gray-700 mb-1">Data de Aplicação</label>
+                    <label for="application_date" class="text-sm font-medium text-gray-700 mb-1">Data de
+                        Aplicação</label>
                     <input type="date" name="application_date" id="application_date" required
                         class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-gray-400">
                 </div>
             </div>
 
             <div class="flex justify-end mt-4">
-                <button type="submit" class="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition">
+                <button type="submit"
+                    class="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 transition">
                     Salvar Aplicação
                 </button>
             </div>
@@ -240,7 +288,7 @@
 
     <div class="bg-white p-6 rounded-lg border border-gray-200 mt-6">
         <h2 class="text-lg font-medium text-gray-900 mb-4">Doses Aplicadas</h2>
-        
+
         <div class="overflow-x-auto rounded-lg border border-gray-200">
             <table class="min-w-full text-sm text-left text-gray-600">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b border-gray-200">
@@ -262,10 +310,12 @@
                                     <?= date('d/m/Y', strtotime($vacinaAplicada->pivot_application_date)) ?>
                                 </td>
                                 <td class="px-6 py-4 text-center">
-                                    <form action="<?= route('cattlevaccines.destroy') ?>" method="POST" onsubmit="return confirm('Deseja realmente apagar este registro do histórico?');">
+                                    <form action="<?= route('cattlevaccines.destroy') ?>" method="POST"
+                                        onsubmit="return confirm('Deseja realmente apagar este registro do histórico?');">
                                         <input type="hidden" name="cattle_id" value="<?= $cattle_data->id ?>">
                                         <input type="hidden" name="vaccine_id" value="<?= $vacinaAplicada->id ?>">
-                                        <button type="submit" class="text-red-500 hover:text-red-700 font-medium">Excluir</button>
+                                        <button type="submit"
+                                            class="text-red-500 hover:text-red-700 font-medium">Excluir</button>
                                     </form>
                                 </td>
                             </tr>

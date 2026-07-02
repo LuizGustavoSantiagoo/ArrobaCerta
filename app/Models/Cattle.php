@@ -141,4 +141,15 @@ class Cattle extends Model
             to_foreign_key: 'vaccine_id'
         );
     }
+
+    public function tags(): BelongsToMany
+    {
+        return new BelongsToMany(
+            model: $this,
+            related: Tag::class,
+            pivot_table: 'cattle_tags',
+            from_foreign_key: 'cattle_id',
+            to_foreign_key: 'tag_id'
+        );
+    }
 }

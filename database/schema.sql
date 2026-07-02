@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS cattle;
 DROP TABLE IF EXISTS cattle_images;
 DROP TABLE IF EXISTS cattle_vaccines;
 DROP TABLE IF EXISTS vaccines;
+DROP TABLE IF EXISTS tag;
+DROP TABLE IF EXISTS cattle_tags;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -58,6 +60,21 @@ CREATE TABLE cattle_vaccines (
     
     FOREIGN KEY (cattle_id) REFERENCES cattle(id) ON DELETE CASCADE,
     FOREIGN KEY (vaccine_id) REFERENCES vaccines(id) ON DELETE CASCADE
+);
+
+CREATE TABLE tag (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name varchar(255) not null
+);
+
+CREATE TABLE cattle_tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cattle_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    application_date DATE not null,
+
+    FOREIGN KEY (cattle_id) REFERENCES cattle(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE
 );
 
 SET foreign_key_checks = 1;

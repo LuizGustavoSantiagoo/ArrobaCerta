@@ -6,6 +6,7 @@ use App\Controllers\AuthenticationsController;
 use App\Controllers\CattleController;
 use App\Controllers\CattleImagesController;
 use App\Controllers\CattleVaccinesController;
+use App\Controllers\TagController;
 use Core\Router\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('root');
@@ -30,4 +31,7 @@ Route::middleware('auth')->group(function () {
     // cattle vaccines routes
     Route::post('/cattle/vaccines/add', [CattleVaccinesController::class, 'store'])->name('cattlevaccines.store');
     Route::post('/cattle/vaccines/remove', [CattleVaccinesController::class, 'destroy'])->name('cattlevaccines.destroy');
+
+    // tags
+    Route::post('/tag/{id}', [TagController::class, 'create'])->name('tag.create');
 });
