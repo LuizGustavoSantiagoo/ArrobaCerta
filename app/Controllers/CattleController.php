@@ -8,6 +8,7 @@ use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use Lib\FlashMessage;
 use Lib\Paginator;
+use App\Models\Tag;
 
 class CattleController extends Controller
 {
@@ -83,8 +84,9 @@ class CattleController extends Controller
         }
 
         $allVaccines = Vaccine::all();
+        $allTags = Tag::all();
 
-        $this->render('cattle/edit', compact('cattle_data', 'title', 'user', 'allVaccines'));
+        $this->render('cattle/edit', compact('cattle_data', 'title', 'user', 'allVaccines', 'allTags'));
     }
 
     public function destroy(Request $request): void

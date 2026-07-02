@@ -6,6 +6,8 @@ use App\Controllers\AuthenticationsController;
 use App\Controllers\CattleController;
 use App\Controllers\CattleImagesController;
 use App\Controllers\CattleVaccinesController;
+use App\Controllers\CattleTagsController;
+
 use Core\Router\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('root');
@@ -30,4 +32,9 @@ Route::middleware('auth')->group(function () {
     // cattle vaccines routes
     Route::post('/cattle/vaccines/add', [CattleVaccinesController::class, 'store'])->name('cattlevaccines.store');
     Route::post('/cattle/vaccines/remove', [CattleVaccinesController::class, 'destroy'])->name('cattlevaccines.destroy');
+
+    //cattle tags routes
+    Route::post('/cattle/tags/add', [CattleTagsController::class, 'store'])->name('cattletags.store');
+    Route::post('/cattle/tags/remove', [CattleTagsController::class, 'destroy'])->name('cattletags.destroy');
+
 });
