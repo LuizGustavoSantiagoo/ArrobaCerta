@@ -11,28 +11,28 @@ class TagPopulate
         try {
             $tagsDataList = [
                 [
-                    'name' => 'Febre Aftosa', 
-                    'description' => 'Vacina obrigatória contra a febre aftosa. Deve ser aplicada em todo o rebanho.'
+                    'name' => 'Reprodutor', 
+                    'description' => 'Animal utilizado como reprodutor na propriedade.'
                 ],
                 [
-                    'name' => 'Brucelose (B19/RB51)', 
-                    'description' => 'Vacina obrigatória para fêmeas bovinas entre 3 e 8 meses de idade.'
+                    'name' => 'Matriz', 
+                    'description' => 'Vaca matriz de novos animais'
                 ],
                 [
-                    'name' => 'Raiva Herbívora', 
-                    'description' => 'Vacina anual profilática contra a raiva, especialmente em áreas de risco.'
+                    'name' => 'Confinamento', 
+                    'description' => 'Animal separado confinamento de engorda.'
                 ],
                 [
-                    'name' => 'Carbúnculo Sintomático (Manqueira)', 
-                    'description' => 'Vacina preventiva contra clostridioses, aplicada a partir dos 3 meses.'
+                    'name' => 'Venda', 
+                    'description' => 'Animal separado para futura venda.'
                 ],
                 [
-                    'name' => 'Leptospirose', 
-                    'description' => 'Vacina reprodutiva recomendada para fêmeas em idade reprodutiva e touros.'
+                    'name' => 'Observação', 
+                    'description' => 'Animal com problemas, recomenda-se observacao constante.'
                 ],
                 [
-                    'name' => 'IBR / BVD', 
-                    'description' => 'Vacina contra vírus respiratórios e reprodutivos bovinos.'
+                    'name' => 'Isolamento', 
+                    'description' => 'Animal isolado para a nao propagacao de doencas.'
                 ]
             ];
 

@@ -12,6 +12,7 @@ class CattleTagsController
     {
         $cattleId = $request->getParam('cattle_id');
         $tagId = $request->getParam('tag_id');
+        $applicationDate = $request->getParam('application_date');
 
         $cattle = Cattle::findById($cattleId);
 
@@ -21,13 +22,25 @@ class CattleTagsController
             return;
         }
 
-        if (empty($tagId)) {
-            FlashMessage::danger('Selecione uma TAG.');
+        if (empty($tagId) || empty($applicationDate)) {
+            FlashMessage::danger('Selecione uma tag e informe a data de aplicação.');
             $this->redirectBack();
             return;
         }
 
-        $success = $cattle->tags()->attach($tagId);
+        $pdo = \Core\Database\Database::getDatabaseConn();
+        $stmt = $pdo->prepare("SELECT id FROM cattle_tags WHERE cattle_id = ? AND tag_id = ?");
+        $stmt->execute([$cattleId, $tagId]);
+    
+        if ($stmt->fetch()) {
+            FlashMessage::danger('Esta tag já está associada a este animal.');
+            $this->redirectBack();
+            return; 
+        }
+
+        $success = $cattle->tags()->attach($tagId, [
+            'application_date' => $applicationDate
+        ]);
 
         if ($success) {
             FlashMessage::success('Tag registrada no histórico do animal!');
@@ -46,7 +59,7 @@ class CattleTagsController
         $cattle = Cattle::findById($cattleId);
 
         if ($cattle && $tagId) {
-            $cattle->vaccines()->detach($tagId);
+            $cattle->tags()->detach($tagId);
             FlashMessage::success('Registro de tag removido com sucesso.');
         }
 
