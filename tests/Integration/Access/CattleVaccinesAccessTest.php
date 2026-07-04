@@ -31,4 +31,18 @@ class CattleVaccinesAccessTest extends TestCase
 
         $this->assertEquals(302, $response->getStatusCode());
     }
+
+    public function test_should_not_access_index_route_not_authenticated(): void
+    {
+        $response = $this->client->get('/vaccines');
+
+        $this->assertEquals(302, $response->getStatusCode());
+    }
+
+    public function test_should_not_access_find_by_name_route_not_authenticated(): void
+    {
+        $response = $this->client->post('/vaccines/findByName');
+
+        $this->assertEquals(302, $response->getStatusCode());
+    }
 }

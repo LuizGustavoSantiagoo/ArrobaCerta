@@ -30,4 +30,8 @@ Route::middleware('auth')->group(function () {
     // cattle vaccines routes
     Route::post('/cattle/vaccines/add', [CattleVaccinesController::class, 'store'])->name('cattlevaccines.store');
     Route::post('/cattle/vaccines/remove', [CattleVaccinesController::class, 'destroy'])->name('cattlevaccines.destroy');
+
+    // vaccines
+    Route::get('/vaccines', [CattleVaccinesController::class, 'index'])->name('vaccines.index');
+    Route::post('/vaccines/findByName', [CattleVaccinesController::class, 'findByName'])->name('vaccine.findByName');
 });

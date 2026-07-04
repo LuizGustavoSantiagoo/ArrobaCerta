@@ -1,0 +1,32 @@
+<div>
+    <div class="flex justify-center text-lg">
+        <h1 class="font-bold">Listagem de vacinas</h1>
+    </div>
+
+    <form class="max-w-md mx-auto">
+        <div class="flex justify-between gap-2">
+            <input type="search" id="search" name="name" class="block w-full p-3 ps-9 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body" placeholder="Nome da vacina" required />
+            <button type="button" id="searchBtn" class="bg-blue-500 text-white rounded px-3 py-2 hover:bg-blue-800"><i class="fa-brands fa-sistrix"></i></button>
+        </div>
+        <div id="error" class="text-red-400" hidden>
+            <p>A pesquisa nao pode ser nula</p>
+        </div>
+    </form>
+
+    <section>
+        <div class="w-[90%] mx-auto flex flex-col gap-4 mt-5">
+            <table class="table-auto w-full border-collapse border border-gray-300">
+                <thead>
+                    <tr class="border">
+                        <th class="border p-2">#</th>
+                        <th class="border p-2">Nome</th>
+                        <th class="border p-2 hidden md:table-cell">Descrição</th>
+                    </tr>
+                </thead>
+
+                <tbody id="vaccinesTableBody">
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
