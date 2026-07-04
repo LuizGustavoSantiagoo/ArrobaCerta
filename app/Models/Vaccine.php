@@ -27,6 +27,14 @@ class Vaccine extends Model
         Validations::notEmpty('name', $this);
     }
 
+    /**
+     * @return array<Vaccine>
+     */
+    public static function findByName(string $name): array
+    {
+        return Vaccine::whereLike(['name' => $name]);
+    }
+
     public function cattle(): BelongsToMany
     {
         return new BelongsToMany(

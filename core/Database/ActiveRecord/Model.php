@@ -338,6 +338,43 @@ abstract class Model
 
     /**
      * @param array<string, mixed> $conditions
+     * @return array<static>
+     */
+    public static function whereLike(array $conditions): array
+    {
+        $table = static::$table;
+        $attributes = implode(', ', static::$columns);
+
+        $sql = <<<SQL
+            SELECT id, {$attributes} FROM {$table} WHERE
+        SQL;
+
+        $sqlConditions = array_map(function ($column) {
+            return "{$column} LIKE :{$column}";
+        }, array_keys($conditions));
+
+        $orderColumn = array_key_first($conditions);
+        $sql .= ' ' . implode(' AND ', $sqlConditions) . " ORDER BY {$orderColumn} ASC";
+
+        $pdo = Database::getDatabaseConn();
+        $stmt = $pdo->prepare($sql);
+
+        foreach ($conditions as $column => $value) {
+            $stmt->bindValue($column, "%{$value}%");
+        }
+
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $models = [];
+        foreach ($rows as $row) {
+            $models[] = new static($row);
+        }
+        return $models;
+    }
+
+    /**
+     * @param array<string, mixed> $conditions
      */
     public static function findBy($conditions): ?static
     {

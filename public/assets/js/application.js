@@ -25,6 +25,56 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const button = document.getElementById('searchBtn');
+
+  if (!button) return;
+
+  button.addEventListener('click', (event) => {
+    event.preventDefault();
+    const termo = document.getElementById('search').value;
+
+    if (termo === null || termo === '') {
+      const errorMessage = document.getElementById('error');
+      errorMessage.hidden = false;
+      return;
+    }
+
+    document.getElementById('error').hidden = true;
+
+    fetch('/vaccines/findByName', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json'
+      },
+      body: new URLSearchParams({ name: termo })
+    })
+      .then(response => response.json())
+      .then(data => renderVaccines(data.vaccines))
+      .catch(error => alert('Erro:', error));
+
+  });
+});
+
+function renderVaccines(vaccines) {
+  const tbody = document.getElementById('vaccinesTableBody');
+  if (!tbody) return;
+
+  if (!vaccines || vaccines.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" class="border p-2 text-center">Nenhuma vacina encontrada.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = vaccines.map(vaccine => `
+    <tr class="border">
+      <td class="border p-2">${vaccine.id}</td>
+      <td class="border p-2">${vaccine.name}</td>
+      <td class="border p-2 hidden md:table-cell">${vaccine.description || 'Não informado'}</td>
+    </tr>
+  `).join('');
+}
+
 function openPage(evt, pageName) {
   var i, tabcontent, tablinks;
 
@@ -73,46 +123,48 @@ function formatMoneyInput(input, finalize) {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-const saleDateInput = document.getElementById('sale_date');
-const saleValueInput = document.getElementById('sale_value_in_cents');
-const soldSection = document.getElementById('sold-section');
+  const saleDateInput = document.getElementById('sale_date');
+  const saleValueInput = document.getElementById('sale_value_in_cents');
+  const soldSection = document.getElementById('sold-section');
 
-const stateSelect = document.getElementById('state');
-const deathSection = document.getElementById('death-section');
-const deathDateInput = document.getElementById('death_date');
-const deathReasonInput = document.getElementById('death_reason');
+  const stateSelect = document.getElementById('state');
+  const deathSection = document.getElementById('death-section');
+  const deathDateInput = document.getElementById('death_date');
+  const deathReasonInput = document.getElementById('death_reason');
 
-function updateDeathSection() {
-  if (stateSelect.value === 'dead') {
-    deathSection.classList.remove('hidden');
-    deathDateInput.setAttribute('name', 'cattle[death_date]');
-    deathReasonInput.setAttribute('name', 'cattle[death_reason]');
-  } else {
-    deathSection.classList.add('hidden');
-    deathDateInput.removeAttribute('name');
-    deathReasonInput.removeAttribute('name');
-    deathDateInput.value = '';
-    deathReasonInput.value = '';
+  if (!stateSelect) return;
+
+  function updateDeathSection() {
+    if (stateSelect.value === 'dead') {
+      deathSection.classList.remove('hidden');
+      deathDateInput.setAttribute('name', 'cattle[death_date]');
+      deathReasonInput.setAttribute('name', 'cattle[death_reason]');
+    } else {
+      deathSection.classList.add('hidden');
+      deathDateInput.removeAttribute('name');
+      deathReasonInput.removeAttribute('name');
+      deathDateInput.value = '';
+      deathReasonInput.value = '';
+    }
   }
-}
 
-stateSelect.addEventListener('change', updateDeathSection);
-updateDeathSection();
+  stateSelect.addEventListener('change', updateDeathSection);
+  updateDeathSection();
 
-function updateSoldSection() {
-  if (stateSelect.value === 'sold') {
-    soldSection.classList.remove('hidden');
-    saleDateInput.setAttribute('name', 'cattle[sale_date]');
-    saleValueInput.setAttribute('name', 'cattle[sale_value_in_cents]');
-  } else {
-    soldSection.classList.add('hidden');
-    saleDateInput.removeAttribute('name');
-    saleValueInput.removeAttribute('name');
-    saleDateInput.value = '';
-    saleValueInput.value = '';
+  function updateSoldSection() {
+    if (stateSelect.value === 'sold') {
+      soldSection.classList.remove('hidden');
+      saleDateInput.setAttribute('name', 'cattle[sale_date]');
+      saleValueInput.setAttribute('name', 'cattle[sale_value_in_cents]');
+    } else {
+      soldSection.classList.add('hidden');
+      saleDateInput.removeAttribute('name');
+      saleValueInput.removeAttribute('name');
+      saleDateInput.value = '';
+      saleValueInput.value = '';
+    }
   }
-}
 
-stateSelect.addEventListener('change', updateSoldSection);
-updateSoldSection();
-} );
+  stateSelect.addEventListener('change', updateSoldSection);
+  updateSoldSection();
+});

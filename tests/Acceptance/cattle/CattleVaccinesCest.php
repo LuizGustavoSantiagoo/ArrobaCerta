@@ -65,6 +65,7 @@ class CattleVaccinesCest extends BaseAcceptanceCest
         \Database\Populate\VaccinePopulate::populate();
 
         $this->createCattleAndGoToEdit($page);
+
         $page->click('Vacinas');
         $page->waitForElementVisible('#vaccine_id', 5);
         $page->selectOption('vaccine_id', '1');

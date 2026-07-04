@@ -2,12 +2,36 @@
 
 namespace App\Controllers;
 
+use Core\Http\Controllers\Controller;
 use Core\Http\Request;
 use App\Models\Cattle;
+use App\Models\Vaccine;
 use Lib\FlashMessage;
 
-class CattleVaccinesController
+class CattleVaccinesController extends Controller
 {
+    public function index(): void
+    {
+        $vaccine = Vaccine::all();
+        $user = $this->current_user;
+        $title = 'vaccines';
+
+        $this->render('vaccines/index', compact('vaccine', 'user', 'title'));
+    }
+
+    public function findByName(Request $request): void
+    {
+        $vaccine = Vaccine::findByName($request->getParam('name'));
+        $user = $this->current_user;
+        $title = 'vaccines';
+
+        if ($request->acceptJson()) {
+            $this->renderJson('vaccines/findByName', compact('vaccine', 'title'));
+        } else {
+            $this->render('vaccines/index', compact('vaccine', 'user', 'title'));
+        }
+    }
+
     public function store(Request $request): void
     {
         $cattleId = $request->getParam('cattle_id');
@@ -54,12 +78,5 @@ class CattleVaccinesController
         }
 
         $this->redirectBack();
-    }
-
-    private function redirectBack(): void
-    {
-        $referer = $_SERVER['HTTP_REFERER'] ?? '/';
-        header("Location: $referer");
-        exit;
     }
 }
